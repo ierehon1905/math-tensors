@@ -1,11 +1,12 @@
-type DeepNumArr = number | number[] | DeepNumArr[];
-type SimpleOp = (scalar: number, index: number[]) => number;
-type GenericOp = (scalar: number, index: number[]) => DeepNumArr;
+export type DeepNumArr<T = number> = T | T[] | DeepNumArr[];
+type OpArgs = [scalar: number, index: number[]];
+type SimpleOp = (...args: OpArgs) => number;
+type GenericOp = (...args: OpArgs) => DeepNumArr;
 type AnyOp = SimpleOp | GenericOp;
 type MixedIndex = (string | number)[];
 
-function getDepth(data: DeepNumArr, depth = 0): number {
-  if (typeof data === "number") {
+export function getDepth(data: DeepNumArr, depth = 0): number {
+  if (!Array.isArray(data)) {
     return depth;
   }
   return getDepth(data[0], depth + 1);
@@ -108,6 +109,12 @@ export class Tensor {
 
   public map(op: AnyOp): Tensor {
     const m = new Tensor(this.mapData(this.data, op, []));
+
+    return m;
+  }
+
+  public mapAny<T>(op: (...args: OpArgs) => T): DeepNumArr<T> {
+    const m = this.mapData(this.data, op as any, []) as DeepNumArr<T>;
 
     return m;
   }

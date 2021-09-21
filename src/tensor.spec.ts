@@ -1,3 +1,4 @@
+import { DEV_2D_TENSOR, DEV_3D_TENSOR, DEV_4D_TENSOR } from "./constants";
 import { Tensor } from "./tensor";
 
 describe("Tensor", () => {
@@ -295,10 +296,7 @@ describe("Tensor", () => {
     });
 
     it("contracts 2d small", () => {
-      const t = new Tensor([
-        [1, 2],
-        [5, 6],
-      ]);
+      const t = DEV_2D_TENSOR;
 
       const c = t.contraction([0, 1]);
 
@@ -306,23 +304,7 @@ describe("Tensor", () => {
     });
 
     it("contracts 3d", () => {
-      const t = new Tensor([
-        [
-          [1, 2, 3],
-          [5, 6, 6],
-          [7, 8, 9],
-        ],
-        [
-          [10, 2, 3],
-          [4, 5, 6],
-          [7, 8, 9],
-        ],
-        [
-          [9, 3, 8],
-          [9, 2, 8],
-          [1, 3, 7],
-        ],
-      ]);
+      const t = DEV_3D_TENSOR;
 
       const c = t.contraction([1, 2]);
 
@@ -354,36 +336,7 @@ describe("Tensor", () => {
     });
 
     it("contracts 4d", () => {
-      const t = new Tensor([
-        [
-          [
-            [1, 2, 2, 3],
-            [5, 6, 6, 6],
-            [7, 8, 8, 9],
-            [7, 8, 8, 9],
-          ],
-          [
-            [10, 2, 2, 3],
-            [4, 5, 5, 6],
-            [7, 8, 8, 9],
-            [7, 8, 8, 9],
-          ],
-        ],
-        [
-          [
-            [9, 3, 3, 8],
-            [9, 2, 2, 6],
-            [1, 3, 3, 4],
-            [1, 3, 3, 4],
-          ],
-          [
-            [9, 3, 3, 8],
-            [9, 2, 2, 6],
-            [1, 3, 3, 4],
-            [1, 3, 3, 4],
-          ],
-        ],
-      ]);
+      const t = DEV_4D_TENSOR;
 
       const c = t.contraction([2, 3]); // x y 1 1
 
