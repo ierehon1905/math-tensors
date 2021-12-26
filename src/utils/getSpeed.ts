@@ -21,7 +21,7 @@ export const getSpeed = (options: GetSpeedOptions): Sparse => {
   const d = sp(...options.diameter);
   const sigma = sp(...options.hardness);
 
-  console.log({ d, sigma });
+  // console.log({ d, sigma });
 
   const res = sp(0.2 * 10 ** -5)
     .mult(A)
@@ -35,6 +35,6 @@ export const getSpeed = (options: GetSpeedOptions): Sparse => {
     .div(sigma)
     .div(1.25);
 
-  console.log(res);
+  // console.log(res);
   return res;
 };

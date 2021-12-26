@@ -109,6 +109,18 @@ export const calculateHardness = (
   // console.log(JSON.stringify(sigma_m.data, null, 2));
   const sigma_m_33 = sigma_m.get([2, 2]) as number;
 
-  console.log({ sigma_m_33 });
+  console.log({
+    lambda,
+    lambda_mwp,
+    mu,
+    mu_mwp,
+    mu1,
+    mu2,
+    C_t,
+    C_mwp,
+    S_t,
+    sigma_m,
+  });
+
   return sigma_m_33;
 };

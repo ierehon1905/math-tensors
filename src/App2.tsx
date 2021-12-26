@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 import "./App.css";
+import { iterateHardness } from "./utils/iterateHardness";
 import { Mineral, minerals } from "./minerals";
-import { calculateHardness } from "./utils/calculateHardness";
 import { getSpeed, GetSpeedOptions } from "./utils/getSpeed";
 import { getTime } from "./utils/getTime";
 import { sp, Sparse } from "./utils/sparse";
@@ -29,54 +29,6 @@ const deepNumberify = (obj: Record<string, any>): void => {
   }
 };
 
-const iterateHardness = (minerals: Mineral[]) => {
-  const maxHardness = minerals
-    .map((m) => m.hardness)
-    .reduce((min, cur) => Math.max(min, cur), 0);
-
-  let hardness = maxHardness;
-
-  const someAreBigger = (_hardness: number) =>
-    minerals
-      .map((m) => [m.hardness, calculateHardness(m, _hardness)])
-      .some(([originalHardness, calculated]) => originalHardness > calculated);
-
-  let leftBorder = 0;
-
-  let safe = 0;
-  while (someAreBigger(hardness) && safe < 1000) {
-    safe++;
-    leftBorder = hardness;
-    hardness *= 2;
-  }
-
-  let rightBorder = hardness;
-  let maxBinarySearchIterations = 12;
-  let binarySearchIterations = 0;
-  let midHardness = -1;
-  let isHardnessSmall = false;
-  while (
-    leftBorder < rightBorder &&
-    binarySearchIterations < maxBinarySearchIterations
-  ) {
-    console.log({ leftBorder, rightBorder });
-
-    binarySearchIterations++;
-
-    midHardness = leftBorder / 2 + rightBorder / 2;
-
-    isHardnessSmall = someAreBigger(midHardness);
-
-    if (isHardnessSmall) {
-      leftBorder = midHardness;
-    } else {
-      rightBorder = midHardness;
-    }
-  }
-
-  return isHardnessSmall ? rightBorder : midHardness;
-};
-
 const formatter = new Intl.RelativeTimeFormat("ru", {
   numeric: "auto",
   style: "long",
@@ -86,8 +38,6 @@ function App2() {
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
     control,
     setValue,
   } = useForm<Inputs>();
@@ -115,13 +65,10 @@ function App2() {
       depth: [data.depth, 0, 0],
     });
 
-    // console.log({ speed, timeH: time.m / 3600 })
     setTimeH(time.div(3600));
-
-    // console.log({ midHardness });
   };
 
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+  const { fields, append, remove } = useFieldArray(
     {
       control,
       name: "minerals",
@@ -136,7 +83,9 @@ function App2() {
           Выполнил студент группы БИСТ-18-1 <strong>Минасян Леон</strong>
         </h2>
       </header>
+
       <main style={{ maxWidth: 900, margin: "auto" }}>
+        <p>Промежуточные результаты логируются в консоль браузера</p>
         <form
           onSubmit={handleSubmit(onSubmit)}
           style={{ display: "inline-block" }}
@@ -173,7 +122,6 @@ function App2() {
                   <select
                     name="preset"
                     onChange={(e) => {
-                      console.log(e.currentTarget.value);
                       const mineral = minerals.find(
                         (m) => m.name === e.currentTarget.value
                       );
@@ -216,12 +164,12 @@ function App2() {
                   />
                 </label>
                 <label>
-                  Доля породы (f1)
+                  Доля породы (f1) (0-1)
                   <br />
                   <input
                     {...register(`minerals.${mineralIndex}.share`)}
                     type="number"
-                    step="any"
+                    step="0.00001"
                     required
                     min={0}
                     max={1}
