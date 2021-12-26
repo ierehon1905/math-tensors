@@ -1,4 +1,4 @@
-import { Tensor } from "./tensor";
+import { Tensor } from "./utils/tensor";
 
 export const DEV_4D_TENSOR = new Tensor([
   [

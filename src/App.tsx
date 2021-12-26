@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import "./App.css";
 import { DEV_3D_TENSOR, DEV_4D_TENSOR } from "./constants";
-import { getDepth } from "./tensor";
+import { getDepth } from "./utils/tensor";
 import { throttle } from "./throttle";
 
 type PositionContextType = {

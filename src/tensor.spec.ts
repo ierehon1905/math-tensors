@@ -1,5 +1,5 @@
 import { DEV_2D_TENSOR, DEV_3D_TENSOR, DEV_4D_TENSOR } from "./constants";
-import { Tensor } from "./tensor";
+import { Tensor } from "./utils/tensor";
 
 describe("Tensor", () => {
   it("works", () => {
